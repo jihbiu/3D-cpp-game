@@ -1,5 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <glad/glad.h>
+#include <glm/vec3.hpp> // glm::vec3
+#include <glm/vec4.hpp> // glm::vec4
+#include <glm/mat4x4.hpp> // glm::mat4
+#include <glm/ext/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale
+#include <glm/ext/matrix_clip_space.hpp> // glm::perspective
+#include <glm/ext/scalar_constants.hpp> // glm::pi
+#include "Render/Shader.h"
 
 #define GLAP_GL_IMPLEMENTATION
 
@@ -17,22 +24,6 @@ GLchar fragmentShader[] =
 "void main(){\n"
 "    fragmentColor = vec4(1.f, 0.5, 0.2, 1.f);\n"
 "}\n\0";
-
-
-
-GLuint CreateShader(const GLchar* shaderSource, GLenum shaderType) {
-    const GLuint shaderId = glCreateShader(shaderType);
-    if (!shaderId) {
-        return 0;   //null handle
-    }
-
-    glShaderSource(shaderId, 1, &shaderSource, nullptr);
-    glCompileShader(shaderId);
-
-    // error handeling
-
-    return shaderId;
-}
 
 std::pair<GLuint, GLuint> CreateVertexBufferObject() {
     const float triangle[] = {
@@ -58,20 +49,15 @@ std::pair<GLuint, GLuint> CreateVertexBufferObject() {
     return std::make_pair(vbo, vao);
 }
 
-GLuint CreateProgram(GLuint vertexShader, GLuint fragmentShader, GLuint geometryShader = 0)
+
+glm::mat4 camera(float Translate, glm::vec2 const& Rotate)
 {
-    const GLuint programId = glCreateProgram();
-    if (!programId) {
-        return 0;
-    }
-
-    glAttachShader(programId, vertexShader);
-    glAttachShader(programId, fragmentShader);
-    if (geometryShader) glAttachShader(programId, geometryShader);
-
-    glLinkProgram(programId);
-
-    return programId;
+    glm::mat4 Projection = glm::perspective(glm::pi<float>() * 0.25f, 4.0f / 3.0f, 0.1f, 100.f);
+    glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -Translate));
+    View = glm::rotate(View, Rotate.y, glm::vec3(-1.0f, 0.0f, 0.0f));
+    View = glm::rotate(View, Rotate.x, glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+    return Projection * View * Model;
 }
 
 
@@ -89,13 +75,10 @@ int main()
     gladLoadGL();
     glViewport(0, 0, static_cast<GLsizei>(window.getSize().x), static_cast<GLsizei>(window.getSize().y));
 
+    Shader shader = Shader("res/shaders/vertexShader.shader", "res/shaders/fragmentShader.shader");
+    //Shader shader = Shader(vertexShader, fragmentShader);
 
-    GLuint vShaderId = CreateShader(vertexShader, GL_VERTEX_SHADER);
-    GLuint fShaderId = CreateShader(fragmentShader, GL_FRAGMENT_SHADER);
-
-    GLuint programId = CreateProgram(vShaderId, fShaderId);
     std::pair<GLuint, GLuint> triangle = CreateVertexBufferObject();
-
 
     while (window.isOpen())
     {
@@ -111,7 +94,8 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(programId);
+        shader.use();
+
         glBindVertexArray(triangle.first);
 
         glDrawArrays(GL_TRIANGLES, 0, 3);
