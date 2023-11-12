@@ -57,20 +57,15 @@ GLuint Shader::getId()
     return programId;
 }
 
-void Shader::setInt(const std::string_view &name, int value)
+void Shader::setInt(const std::string_view& name, int value)
 {
     glUniform1i(glGetUniformLocation(programId, name.data()), value);
 }
 
 void Shader::setMat4(const std::string_view name, const glm::mat4& value)
 {
-    // Activate the shader program
-    glUseProgram(this->programId);
-
-    // Set the uniform value
     glUniformMatrix4fv(glGetUniformLocation(this->programId, name.data()), 1, GL_FALSE, &value[0][0]);
 }
-
 
 GLuint Shader::createShader(const char* shaderSource, GLenum shaderType)
 {
