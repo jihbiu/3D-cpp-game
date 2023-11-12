@@ -1,8 +1,4 @@
-#include <random>
-
-#include <SFML/Graphics.hpp>
 #include "Game.h"
-
 
 int main()
 {
@@ -11,5 +7,3 @@ int main()
 
     return 0;
 }
-
-
