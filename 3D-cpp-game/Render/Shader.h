@@ -1,4 +1,5 @@
 #pragma once
+
 #include <glm/ext/matrix_float4x4.hpp>
 #include <glad/glad.h>
 
@@ -10,6 +11,8 @@
 class Shader
 {
 public:
+	Shader() = default;
+
 	Shader(std::string vertrexPath, std::string fragmentPath);
 	Shader(GLchar vertexShader[], GLchar fragmentShader[]);
 
@@ -24,9 +27,9 @@ public:
 	void use();
 	GLuint getId();
 
-
 	void setInt(const std::string_view &name, int value);
 	void setMat4(const std::string_view name, const glm::mat4& value);
+
 private:
 	GLuint programId;
 	
