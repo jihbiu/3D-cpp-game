@@ -1,37 +1,46 @@
+#include <random>
+
 #include <SFML/Graphics.hpp>
 #include <glad/glad.h>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/ext/scalar_constants.hpp> 
+#include "Render/Shader.h"
+#include "Render/Camera.h"
+#include <iostream>
 
 #define GLAP_GL_IMPLEMENTATION
 
+void processEvents(sf::Window& window, Camera& camera, float deltaTime) {
+    sf::Event event;
+    while (window.pollEvent(event)) {
+        if (event.type == sf::Event::Closed ||
+            (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
+            window.close();
 
-GLchar vertexShader[] =
-"#version 330 core\n"
-"layout (location = 0) in vec3 position;\n"
-"void main() {\n"
-"      gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
-"}\n\0";
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+            camera.moveForward(deltaTime);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            camera.moveBackward(deltaTime);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+            camera.moveLeft(deltaTime);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            camera.moveRight(deltaTime);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+            camera.moveUp(deltaTime);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+            camera.moveDown(deltaTime);
+        }
 
-GLchar fragmentShader[] =
-"#version 330 core\n"
-"out vec4 fragmentColor;\n"
-"void main(){\n"
-"    fragmentColor = vec4(1.f, 0.5, 0.2, 1.f);\n"
-"}\n\0";
-
-
-
-GLuint CreateShader(const GLchar* shaderSource, GLenum shaderType) {
-    const GLuint shaderId = glCreateShader(shaderType);
-    if (!shaderId) {
-        return 0;   //null handle
     }
-
-    glShaderSource(shaderId, 1, &shaderSource, nullptr);
-    glCompileShader(shaderId);
-
-    // error handeling
-
-    return shaderId;
 }
 
 std::pair<GLuint, GLuint> CreateVertexBufferObject() {
@@ -58,21 +67,6 @@ std::pair<GLuint, GLuint> CreateVertexBufferObject() {
     return std::make_pair(vbo, vao);
 }
 
-GLuint CreateProgram(GLuint vertexShader, GLuint fragmentShader, GLuint geometryShader = 0)
-{
-    const GLuint programId = glCreateProgram();
-    if (!programId) {
-        return 0;
-    }
-
-    glAttachShader(programId, vertexShader);
-    glAttachShader(programId, fragmentShader);
-    if (geometryShader) glAttachShader(programId, geometryShader);
-
-    glLinkProgram(programId);
-
-    return programId;
-}
 
 
 int main()
@@ -89,30 +83,51 @@ int main()
     gladLoadGL();
     glViewport(0, 0, static_cast<GLsizei>(window.getSize().x), static_cast<GLsizei>(window.getSize().y));
 
+    Shader shader = Shader("res/shaders/vertexShader.shader", "res/shaders/fragmentShader.shader");
 
-    GLuint vShaderId = CreateShader(vertexShader, GL_VERTEX_SHADER);
-    GLuint fShaderId = CreateShader(fragmentShader, GL_FRAGMENT_SHADER);
-
-    GLuint programId = CreateProgram(vShaderId, fShaderId);
     std::pair<GLuint, GLuint> triangle = CreateVertexBufferObject();
 
+    glm::vec3 initialPosition = glm::vec3(0.0f, 0.0f, 0.0f); // Position the camera 3 units away on the Z-axis
+    glm::vec3 target = glm::vec3(0.0f, 0.0f, 0.0f); // The point where the triangle is (assuming it's at the origin)
+    glm::vec3 upDirection = glm::vec3(0.0f, 1.0f, 0.0f); // Up direction of the camera
+    glm::vec3 front(0,0,0);
+
+    Camera camera(initialPosition, front, 0.f, 0.f);
+
+    sf::Clock clock;
+    double t = 0.0;
+    const double dt = 1.0 / 60.0;
+    double currentTime = clock.getElapsedTime().asSeconds();
 
     while (window.isOpen())
     {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed ||
-                (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
-
-                window.close();
-        }
-
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(programId);
-        glBindVertexArray(triangle.first);
+        shader.use();
+
+
+        double newTime = clock.getElapsedTime().asSeconds();
+        double frameTime = newTime - currentTime;
+        currentTime = newTime;
+
+        while (frameTime > 0.0) {
+            float deltaTime = std::min(frameTime, dt);
+            
+            processEvents(window, camera, deltaTime);
+
+            frameTime -= deltaTime;
+            t += deltaTime;
+        }
+
+
+        glm::mat4 model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+        glm::mat4 view = camera.getView();
+        glm::mat4 projection = camera.getProjection();
+
+        shader.setMat4("mvp", glm::mat4(projection * view * model));
+
+        glBindVertexArray(triangle.second);
 
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -121,3 +136,5 @@ int main()
 
     return 0;
 }
+
+
