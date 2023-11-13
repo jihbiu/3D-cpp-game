@@ -3,7 +3,6 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
-// World up vector (static definition)
 glm::vec3 Camera::worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 float Camera::speed = 10.0;
 
@@ -23,6 +22,7 @@ Camera::Camera(
 
 
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    RecreateLookAt();
 }
 
 Camera Camera::create(const glm::vec3& position, const glm::vec3& front, float yaw, float pitch)
@@ -32,22 +32,12 @@ Camera Camera::create(const glm::vec3& position, const glm::vec3& front, float y
 
 void Camera::rotate(const sf::Vector2i& mouseDelta)
 {
-    float sensitivity = 0.1f;
-    yaw += mouseDelta.x * sensitivity;
-    pitch += mouseDelta.y * sensitivity;
+    float sensivity = 0.3;
+    yaw += (mouseDelta.x * sensivity);
+    pitch -= (mouseDelta.y * sensivity);
 
-    pitch = std::max(std::min(pitch, 89.0f), -89.0f);
-
-    glm::vec3 front;
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    this->front = glm::normalize(front);
-
-    right = glm::normalize(glm::cross(this->front, worldUp));
-    up = glm::normalize(glm::cross(right, this->front));
-
-    // Update the View Matrix
+    pitch = std::min(std::max(pitch, -89.f), 89.f);
+    
     RecreateLookAt();
 }
 
