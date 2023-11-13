@@ -17,6 +17,9 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath)
 
     glDeleteShader(vShaderId);
     glDeleteShader(fShaderId);
+
+    use();
+    setInt("texture1", 0);
 }
 
 Shader::Shader(GLchar vertexShader[], GLchar fragmentShader[])
