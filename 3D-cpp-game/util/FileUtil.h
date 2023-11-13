@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
-#include <iostream>
-#include <sstream>
+#include <fstream>
 
 class FileUtil
 {
@@ -20,18 +19,6 @@ public:
         file.read(&contents[0], contents.size());
         file.close();
         return contents;       
-
-        // std::stringstream buffer;
-        // buffer << file.rdbuf();
-        // file.close();
-        //
-        // std::string fileContent = buffer.str();
-        // GLchar* glCharFileContent = new GLchar[fileContent.length() + 1];
-        //
-        // std::copy(fileContent.begin(), fileContent.end(), glCharFileContent);
-        // glCharFileContent[fileContent.length()] = '\0';
-        //
-        // return glCharFileContent;
     }
 };
 

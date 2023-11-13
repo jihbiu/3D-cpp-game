@@ -17,6 +17,9 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath)
 
     glDeleteShader(vShaderId);
     glDeleteShader(fShaderId);
+
+    use();
+    setInt("texture1", 0);
 }
 
 Shader::Shader(GLchar vertexShader[], GLchar fragmentShader[])
@@ -55,6 +58,16 @@ void Shader::use()
 GLuint Shader::getId()
 {
     return programId;
+}
+
+void Shader::setInt(const std::string_view& name, int value)
+{
+    glUniform1i(glGetUniformLocation(programId, name.data()), value);
+}
+
+void Shader::setMat4(const std::string_view name, const glm::mat4& value)
+{
+    glUniformMatrix4fv(glGetUniformLocation(this->programId, name.data()), 1, GL_FALSE, &value[0][0]);
 }
 
 

@@ -135,20 +135,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Render\Shader.cpp" />
-    <ClCompile Include="ShaderProgram.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cube.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Shader.h" />
     <ClInclude Include="util\FileUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\fragmentShader.shader" />
     <None Include="res\shaders\vertexShader.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\grass.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
