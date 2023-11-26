@@ -5,7 +5,7 @@
 
 // World up vector (static definition)
 glm::vec3 Camera::worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
-float Camera::speed = 10.0;
+float Camera::speed = 5.0;
 
 Camera::Camera(
     const glm::vec3& position,
