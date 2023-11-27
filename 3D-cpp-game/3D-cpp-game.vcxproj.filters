@@ -1,50 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="World\Objects\CoordinatesAxes.cpp" />
+    <ClCompile Include="World\Objects\Cube.cpp" />
+    <ClCompile Include="World\Chunks\CubePalette.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="util\PerlinNoise.cpp" />
+    <ClCompile Include="Render\Camera.cpp" />
+    <ClCompile Include="glad.c" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Render\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="glad.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
+    <ClInclude Include="World\Chunks\Chunk.h" />
+    <ClInclude Include="World\Objects\CoordinatesAxes.h" />
+    <ClInclude Include="World\Objects\Cube.h" />
+    <ClInclude Include="World\Chunks\CubePalette.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="util\PerlinNoise.h" />
+    <ClInclude Include="Render\Camera.h" />
+    <ClInclude Include="Render\Shader.h" />
+    <ClInclude Include="util\FileUtil.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Render\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\FileUtil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <Image Include="res\textures\grass.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\fragmentShader.shader" />
     <None Include="res\shaders\vertexShader.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="NewFilter1">
+      <UniqueIdentifier>{8ca26328-0c36-464e-a55e-17e60291acf0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

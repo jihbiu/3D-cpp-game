@@ -135,14 +135,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="World\Objects\CoordinatesAxes.cpp" />
+    <ClCompile Include="World\Objects\Cube.cpp" />
+    <ClCompile Include="World\Chunks\CubePalette.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="util\PerlinNoise.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Render\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="World\Chunks\Chunk.h" />
+    <ClInclude Include="World\Objects\CoordinatesAxes.h" />
+    <ClInclude Include="World\Objects\Cube.h" />
+    <ClInclude Include="World\Chunks\CubePalette.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="util\PerlinNoise.h" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Shader.h" />
     <ClInclude Include="util\FileUtil.h" />
@@ -150,6 +159,9 @@
   <ItemGroup>
     <None Include="res\shaders\fragmentShader.shader" />
     <None Include="res\shaders\vertexShader.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\grass.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

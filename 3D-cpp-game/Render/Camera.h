@@ -21,12 +21,12 @@ public:
 	glm::vec3 getPosition() const { return position; }
 
 	void rotate(const sf::Vector2i& mouseDelta);
-	void moveForward(float dt);
-	void moveBackward(float dt);
-	void moveLeft(float dt);
-	void moveRight(float dt);
-	void moveUp(float dt);
-	void moveDown(float dt);
+	void moveForward(double dt);
+	void moveBackward(double dt);
+	void moveLeft(double dt);
+	void moveRight(double dt);
+	void moveUp(double dt);
+	void moveDown(double dt);
 
 private:
 	void RecreateLookAt();

@@ -1,11 +1,11 @@
 #include "Game.h"
 
-#include "game.h"
-#include <iostream>
-#include <algorithm>
-
 Game::Game()
-    :camera(glm::vec3(-2.0, 0.0, 1.0), glm::vec3(0.0, 0.0, 0.0), 0.f, 0.f) // Initialize camera
+    :camera(
+        glm::vec3(5.0, 20.0, 0.0),
+        glm::vec3(0.0, 0.0, 0.0),
+        0.f, 0.f
+    )
 {
     init();
 }
@@ -23,40 +23,58 @@ void Game::init() {
     window.setActive(true);
 
     gladLoadGL();
+
     glViewport(0, 0, static_cast<GLsizei>(window.getSize().x), static_cast<GLsizei>(window.getSize().y));
 
+    glEnable(GL_DEPTH_TEST);
+
     shader = Shader("res/shaders/vertexShader.shader", "res/shaders/fragmentShader.shader");
-    triangle = createVertexBufferObject();
+    
+    m_perlinNoise = std::make_unique<PerlinNoise>();
+
+    cubePalette = std::make_unique<CubePalette>();
+    chunk = std::make_unique<Chunk<16, 16, 16>>(
+        glm::vec2(10, 10),
+        *cubePalette
+    );
+     
+    chunk->generate(*m_perlinNoise);
+    
+    coordinateAxes = std::make_unique<CoordinateAxes>();
+    cube = std::make_unique<Cube>("res/textures/stone.jpg");
+
+    mousePosition = sf::Mouse::getPosition();
 }
 
 void Game::run() 
 {
-    const double dt = 1.0 / 60.0;
+    const double dt = 0.01;
     double currentTime = clock.getElapsedTime().asSeconds();
+    double accumulator = 0.0;
 
     while (window.isOpen()) {
-
         double newTime = clock.getElapsedTime().asSeconds();
         double frameTime = newTime - currentTime;
         currentTime = newTime;
+        
+        accumulator += frameTime;
 
-        while (frameTime > 0.0) {
-            float deltaTime = std::min(frameTime, dt);
+        const sf::Vector2i newMousePosition = sf::Mouse::getPosition();
+        camera.rotate(newMousePosition - mousePosition);
+        mousePosition = newMousePosition;
 
-            processEvents(deltaTime);
-            update(deltaTime, dt);
+        while (accumulator >= dt) {
+            processEvents(dt);
+            update();
 
-            frameTime -= deltaTime;
-            t += deltaTime;
-
-            //std::cout << camera.getPosition().x << " | " << camera.getPosition().y << " | " << camera.getPosition().z << " \n";
+            accumulator -= dt;
+            t += dt;
         }
-
         render();
     }
 }
 
-void Game::processEvents(const float &deltaTime) 
+void Game::processEvents(const double &deltaTime) 
 {
     sf::Event event;
     while (window.pollEvent(event)) {
@@ -85,48 +103,40 @@ void Game::processEvents(const float &deltaTime)
     }
 }
 
-void Game::update(double frameTime, double dt) 
+void Game::update() 
 {
+
+
 }
 
 void Game::render() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shader.use();
 
-    glm::mat4 model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-    glm::mat4 view = camera.getView();
-    glm::mat4 projection = camera.getProjection();
+    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 view = camera.getView(); 
+    glm::mat4 projection = camera.getProjection(); 
 
-    shader.setMat4("mvp", glm::mat4(projection * view * model));
+    shader.setMat4("Model", model);
+    shader.setMat4("View", view);
+    shader.setMat4("Projection", projection);
 
-    glBindVertexArray(triangle.second);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+   // shader.setMat4("mvp", glm::mat4(projection * view * model));
+
+    chunk->draw(shader);
+    coordinateAxes->draw();
+    renderCube();
 
     window.display();
 }
 
-std::pair<GLuint, GLuint> Game::createVertexBufferObject() {
-    const float triangle[] = {
-        //  x     y      z
-           -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.0f,  0.5f, 0.0f,
-    };
+void Game::renderCube() {
+    glBindVertexArray(cube->Vao());
 
-    GLuint vbo, vao;
-    glGenBuffers(1, &vbo);
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+    glBindTexture(GL_TEXTURE_2D, cube->Texture());
+    glDrawArrays(GL_TRIANGLES, 0, 36); 
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
-    return std::make_pair(vbo, vao);
 }
