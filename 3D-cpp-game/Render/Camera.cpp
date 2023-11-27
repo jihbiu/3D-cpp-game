@@ -41,21 +41,21 @@ void Camera::rotate(const sf::Vector2i& mouseDelta)
     RecreateLookAt();
 }
 
-void Camera::moveForward(float dt) {
+void Camera::moveForward(double dt) {
     float velocity = speed * dt;
     position += front * velocity; 
 
     RecreateLookAt();
 }
 
-void Camera::moveBackward(float dt) {
+void Camera::moveBackward(double dt) {
     float velocity = speed * dt;
     position -= front * velocity; 
 
     RecreateLookAt();
 }
 
-void Camera::moveLeft(float dt)
+void Camera::moveLeft(double dt)
 {
     float velocity = speed * dt;
     position -= right * velocity; 
@@ -63,7 +63,7 @@ void Camera::moveLeft(float dt)
     RecreateLookAt(); 
 }
 
-void Camera::moveRight(float dt)
+void Camera::moveRight(double dt)
 {
     float velocity = speed * dt;
     position += right * velocity; 
@@ -71,7 +71,7 @@ void Camera::moveRight(float dt)
     RecreateLookAt();
 }
 
-void Camera::moveUp(float dt)
+void Camera::moveUp(double dt)
 {
     float velocity = speed * dt;
     position += up * velocity;
@@ -79,7 +79,7 @@ void Camera::moveUp(float dt)
     RecreateLookAt();
 }
 
-void Camera::moveDown(float dt)
+void Camera::moveDown(double dt)
 {
     float velocity = speed * dt;
     position -= up * velocity;
