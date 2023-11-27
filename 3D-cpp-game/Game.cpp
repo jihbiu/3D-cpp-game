@@ -1,11 +1,11 @@
 #include "Game.h"
 
-#include "game.h"
-#include <iostream>
-#include <algorithm>
-
 Game::Game()
-    :camera(glm::vec3(5.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 0.0), 0.f, 0.f)
+    :camera(
+        glm::vec3(5.0, 20.0, 0.0),
+        glm::vec3(0.0, 0.0, 0.0),
+        0.f, 0.f
+    )
 {
     init();
 }
@@ -29,8 +29,19 @@ void Game::init() {
     glEnable(GL_DEPTH_TEST);
 
     shader = Shader("res/shaders/vertexShader.shader", "res/shaders/fragmentShader.shader");
-    triangle = createVertexBufferObject();
-    cube = std::make_unique<Cube>("res/textures/grass.jpg");
+    
+    m_perlinNoise = std::make_unique<PerlinNoise>();
+
+    cubePalette = std::make_unique<CubePalette>();
+    chunk = std::make_unique<Chunk<16, 16, 16>>(
+        glm::vec2(10, 10),
+        *cubePalette
+    );
+     
+    chunk->generate(*m_perlinNoise);
+    
+    coordinateAxes = std::make_unique<CoordinateAxes>();
+    cube = std::make_unique<Cube>("res/textures/stone.jpg");
 
     mousePosition = sf::Mouse::getPosition();
 }
@@ -63,7 +74,7 @@ void Game::run()
     }
 }
 
-void Game::processEvents(const float &deltaTime) 
+void Game::processEvents(const double &deltaTime) 
 {
     sf::Event event;
     while (window.pollEvent(event)) {
@@ -89,7 +100,6 @@ void Game::processEvents(const float &deltaTime)
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
             camera.moveDown(deltaTime);
         }
-        std::cout << camera.getPosition().x << " | " << camera.getPosition().y << " | " << camera.getPosition().z << "\n";
     }
 }
 
@@ -109,8 +119,14 @@ void Game::render() {
     glm::mat4 view = camera.getView(); 
     glm::mat4 projection = camera.getProjection(); 
 
-    shader.setMat4("mvp", glm::mat4(projection * view * model));
+    shader.setMat4("Model", model);
+    shader.setMat4("View", view);
+    shader.setMat4("Projection", projection);
 
+   // shader.setMat4("mvp", glm::mat4(projection * view * model));
+
+    chunk->draw(shader);
+    coordinateAxes->draw();
     renderCube();
 
     window.display();
@@ -123,28 +139,4 @@ void Game::renderCube() {
     glDrawArrays(GL_TRIANGLES, 0, 36); 
 
     glBindVertexArray(0);
-}
-
-std::pair<GLuint, GLuint> Game::createVertexBufferObject() {
-    const float triangle[] = {
-        //  x     y      z
-           -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.0f,  0.5f, 0.0f,
-    };
-
-    GLuint vbo, vao;
-    glGenBuffers(1, &vbo);
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-    return std::make_pair(vbo, vao);
 }
