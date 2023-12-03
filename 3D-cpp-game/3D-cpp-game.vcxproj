@@ -135,22 +135,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="World\Entities\Objects\HighlitedCube.cpp" />
+    <ClCompile Include="World\Collision\AABB.cpp" />
+    <ClCompile Include="World\Collision\Ray.cpp" />
+    <ClCompile Include="World\Entities\Objects\Cube.cpp" />
+    <ClCompile Include="World\Chunks\CubePalette.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="util\PerlinNoise.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Render\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Cube.h" />
+    <ClInclude Include="World\Entities\Objects\HighlitedCube.h" />
+    <ClInclude Include="World\Chunks\Chunk.h" />
+    <ClInclude Include="World\Collision\AABB.h" />
+    <ClInclude Include="World\Collision\Ray.h" />
+    <ClInclude Include="World\Entities\Objects\Cube.h" />
+    <ClInclude Include="World\Chunks\CubePalette.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="util\PerlinNoise.h" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Shader.h" />
     <ClInclude Include="util\FileUtil.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\shaders\fragmentColorShader.shader" />
     <None Include="res\shaders\fragmentShader.shader" />
+    <None Include="res\shaders\vertexColorShader.shader" />
     <None Include="res\shaders\vertexShader.shader" />
   </ItemGroup>
   <ItemGroup>

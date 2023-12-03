@@ -29,6 +29,7 @@ public:
 
 	void setInt(const std::string_view &name, int value);
 	void setMat4(const std::string_view name, const glm::mat4& value);
+	void setVec3(const std::string_view &name, const glm::vec3& value);
 
 private:
 	GLuint programId;

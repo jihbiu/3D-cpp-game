@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../World/Collision/Ray.h"
+
 #include <SFML/Window.hpp>
 #include <glm/ext/vector_float3.hpp>
 #include <glm/ext/matrix_float4x4.hpp>
@@ -20,6 +22,8 @@ public:
 	glm::mat4 getProjection() const { return projection; }
 	glm::vec3 getPosition() const { return position; }
 
+	Ray generateRay();
+
 	void rotate(const sf::Vector2i& mouseDelta);
 	void moveForward(float dt);
 	void moveBackward(float dt);
@@ -30,6 +34,7 @@ public:
 
 private:
 	void RecreateLookAt();
+	float speed{ 10.f };
 
 	glm::mat4 projection;
 	glm::mat4 lookAt;
@@ -42,5 +47,4 @@ private:
 	float pitch;
 
 	static glm::vec3 worldUp;
-	static float speed;
 };
