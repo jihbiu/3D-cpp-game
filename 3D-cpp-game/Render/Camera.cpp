@@ -4,7 +4,6 @@
 #include <glm/ext/matrix_transform.hpp>
 
 glm::vec3 Camera::worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
-float Camera::speed = 5.0;
 
 Camera::Camera(
     const glm::vec3& position,
@@ -21,7 +20,7 @@ Camera::Camera(
     RecreateLookAt();
 
 
-    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
     RecreateLookAt();
 }
 
@@ -30,9 +29,17 @@ Camera Camera::create(const glm::vec3& position, const glm::vec3& front, float y
     return Camera(position, front, yaw, pitch);
 }
 
+Ray Camera::generateRay()
+{
+    glm::vec3 rayOrigin = position;
+    glm::vec3 rayDirection = glm::normalize(front + glm::vec3(0.f, 0.f, 0.f));
+
+    return Ray(rayOrigin, rayDirection);
+}
+
 void Camera::rotate(const sf::Vector2i& mouseDelta)
 {
-    float sensivity = 0.3;
+    float sensivity = 0.3f;
     yaw += (mouseDelta.x * sensivity);
     pitch -= (mouseDelta.y * sensivity);
 
@@ -40,46 +47,37 @@ void Camera::rotate(const sf::Vector2i& mouseDelta)
     
     RecreateLookAt();
 }
-
-void Camera::moveForward(double dt) {
+void Camera::moveForward(float dt) {
     float velocity = speed * dt;
-    position += front * velocity; 
+    position += front * velocity;
 
     RecreateLookAt();
 }
-
-void Camera::moveBackward(double dt) {
+void Camera::moveBackward(float dt) {
     float velocity = speed * dt;
     position -= front * velocity; 
 
     RecreateLookAt();
 }
-
-void Camera::moveLeft(double dt)
-{
+void Camera::moveLeft(float dt){
     float velocity = speed * dt;
     position -= right * velocity; 
 
     RecreateLookAt(); 
 }
-
-void Camera::moveRight(double dt)
-{
+void Camera::moveRight(float dt){
     float velocity = speed * dt;
     position += right * velocity; 
 
     RecreateLookAt();
 }
-
-void Camera::moveUp(double dt)
-{
+void Camera::moveUp(float dt){
     float velocity = speed * dt;
     position += up * velocity;
 
     RecreateLookAt();
 }
-
-void Camera::moveDown(double dt)
+void Camera::moveDown(float dt)
 {
     float velocity = speed * dt;
     position -= up * velocity;

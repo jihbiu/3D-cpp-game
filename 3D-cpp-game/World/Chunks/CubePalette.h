@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../World/Objects/Cube.h"
+#include "../Entities/Objects/Cube.h"
 
 #include <unordered_map>
 

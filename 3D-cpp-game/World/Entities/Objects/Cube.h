@@ -22,11 +22,8 @@ public:
 
 	void draw() {
 		glBindVertexArray(vao);
-
-		if (texture != 0)
-			glBindTexture(GL_TEXTURE_2D, texture);
-		else 
-			glBindTexture(GL_TEXTURE_2D, 0); 
+		
+		glBindTexture(GL_TEXTURE_2D, texture);
 		
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
