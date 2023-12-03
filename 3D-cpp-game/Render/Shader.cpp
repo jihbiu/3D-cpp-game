@@ -70,6 +70,11 @@ void Shader::setMat4(const std::string_view name, const glm::mat4& value)
     glUniformMatrix4fv(glGetUniformLocation(this->programId, name.data()), 1, GL_FALSE, &value[0][0]);
 }
 
+void Shader::setVec3(const std::string_view& name, const glm::vec3& value)
+{
+    glUniform3fv(glGetUniformLocation(programId, name.data()), 1, &value[0]);
+}
+
 
 GLuint Shader::createShader(const char* shaderSource, GLenum shaderType)
 {

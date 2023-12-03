@@ -1,8 +1,9 @@
 #include "Game.h"
+#include <iostream>
 
 Game::Game()
-    :camera(
-        glm::vec3(5.0, 20.0, 0.0),
+    :m_camera(
+        glm::vec3(-2.0, 15.0, 0.0),
         glm::vec3(0.0, 0.0, 0.0),
         0.f, 0.f
     )
@@ -19,29 +20,30 @@ void Game::init() {
     contextSettings.minorVersion = 3;
     contextSettings.majorVersion = 3;
 
-    window.create(sf::VideoMode(800, 600), "OpenGL works! :)", sf::Style::Default, contextSettings);
-    window.setActive(true);
+    m_window.create(sf::VideoMode(1920, 1080), "Minecraft Clone", sf::Style::Default, contextSettings);
+    m_window.setActive(true);
 
     gladLoadGL();
 
-    glViewport(0, 0, static_cast<GLsizei>(window.getSize().x), static_cast<GLsizei>(window.getSize().y));
+    glViewport(0, 0, static_cast<GLsizei>(m_window.getSize().x), static_cast<GLsizei>(m_window.getSize().y));
 
     glEnable(GL_DEPTH_TEST);
 
-    shader = Shader("res/shaders/vertexShader.shader", "res/shaders/fragmentShader.shader");
+    m_shader = Shader("res/shaders/vertexShader.shader", "res/shaders/fragmentShader.shader");
+
+    m_HighlitedCubeShader = Shader("res/shaders/vertexColorShader.shader", "res/shaders/fragmentColorShader.shader");
+    m_highlightedCube = std::make_unique<HighlightedCube>();
+    
+    m_cubePalette = std::make_unique<CubePalette>();
+    m_chunk = std::make_unique<Chunk<16, 16, 16>>(
+        glm::vec2(0, 0),
+        *m_cubePalette
+    );    
     
     m_perlinNoise = std::make_unique<PerlinNoise>();
-
-    cubePalette = std::make_unique<CubePalette>();
-    chunk = std::make_unique<Chunk<16, 16, 16>>(
-        glm::vec2(10, 10),
-        *cubePalette
-    );
-     
-    chunk->generate(*m_perlinNoise);
+    m_chunk->generate(*m_perlinNoise);
     
-    coordinateAxes = std::make_unique<CoordinateAxes>();
-    cube = std::make_unique<Cube>("res/textures/stone.jpg");
+
 
     mousePosition = sf::Mouse::getPosition();
 }
@@ -49,94 +51,123 @@ void Game::init() {
 void Game::run() 
 {
     const double dt = 0.01;
-    double currentTime = clock.getElapsedTime().asSeconds();
+    double currentTime = m_clock.getElapsedTime().asSeconds();
     double accumulator = 0.0;
 
-    while (window.isOpen()) {
-        double newTime = clock.getElapsedTime().asSeconds();
+    while (m_window.isOpen()) {
+        double newTime = m_clock.getElapsedTime().asSeconds();
         double frameTime = newTime - currentTime;
         currentTime = newTime;
         
         accumulator += frameTime;
 
         const sf::Vector2i newMousePosition = sf::Mouse::getPosition();
-        camera.rotate(newMousePosition - mousePosition);
+        m_camera.rotate(newMousePosition - mousePosition);
         mousePosition = newMousePosition;
 
         while (accumulator >= dt) {
-            processEvents(dt);
             update();
-
             accumulator -= dt;
             t += dt;
         }
+        processEvents(dt);
+        update();
         render();
+
+        std::string frames = "fps: " + std::to_string(1.0 / frameTime);
+        m_window.setTitle(frames);
     }
 }
 
 void Game::processEvents(const double &deltaTime) 
 {
     sf::Event event;
-    while (window.pollEvent(event)) {
+    while (m_window.pollEvent(event)) {
         if (event.type == sf::Event::Closed ||
             (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
-            window.close();
+            m_window.close();
+
+        if (event.type == sf::Event::MouseButtonPressed) {
+            Ray ray = m_camera.generateRay();
+            AABB::HitRecord hitRecord;
+
+            if (m_chunk->Hit(ray, 0.f, 10.f, hitRecord) == Ray::HitType::Hit) {
+                glm::vec3 hitOrigin = hitRecord.m_point;
+                if (event.mouseButton.button == sf::Mouse::Left) 
+                    m_chunk->RemoveBlock(hitOrigin.x, hitOrigin.y, hitOrigin.z);
+                
+                else if (event.mouseButton.button == sf::Mouse::Right) {
+                    glm::vec3 placePosition = hitRecord.m_point;
+
+                    if (hitRecord.m_axis == AABB::Axis::x) 
+                        placePosition.x += (ray.getDirection().x > 0) ? -1 : 1;
+                    else if (hitRecord.m_axis == AABB::Axis::y)
+                        placePosition.y += (ray.getDirection().y > 0) ? -1 : 1;
+                    else if (hitRecord.m_axis == AABB::Axis::z)
+                        placePosition.z += (ray.getDirection().z > 0) ? -1 : 1;
+
+                    m_chunk->PlaceBlock(placePosition.x, placePosition.y, placePosition.z, Cube::Type::Grass);
+                }
+            }
+        }
+
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            camera.moveForward(deltaTime);
+            m_camera.moveForward(deltaTime);
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            camera.moveBackward(deltaTime);
+            m_camera.moveBackward(deltaTime);
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            camera.moveLeft(deltaTime);
+            m_camera.moveLeft(deltaTime);
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            camera.moveRight(deltaTime);
+            m_camera.moveRight(deltaTime);
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
-            camera.moveUp(deltaTime);
+            m_camera.moveUp(deltaTime);
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
-            camera.moveDown(deltaTime);
+            m_camera.moveDown(deltaTime);
         }
     }
 }
 
 void Game::update() 
 {
+    Ray ray = m_camera.generateRay();
+    AABB::HitRecord hitRecord;
 
-
+    if (m_chunk->Hit(ray, 0.f, 100.f, hitRecord) == Ray::HitType::Hit) {
+        glm::vec3 hitOrigin = hitRecord.m_point;
+        m_highlightedCube->setPosition(glm::vec3(hitOrigin.x - 0.5f, hitOrigin.y - 0.5f, hitOrigin.z - 0.5f));
+    }
+    else {
+        m_highlightedCube->setPosition(ray.getOrigin() + ray.getDirection() * 5.f);
+    }
 }
 
 void Game::render() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shader.use();
+    m_shader.use();
 
     glm::mat4 model = glm::mat4(1.0f);
-    glm::mat4 view = camera.getView(); 
-    glm::mat4 projection = camera.getProjection(); 
+    glm::mat4 view = m_camera.getView();
+    glm::mat4 projection = m_camera.getProjection();
+   
+    m_shader.setMat4("Model", model);
+    m_shader.setMat4("View", view);
+    m_shader.setMat4("Projection", projection);
 
-    shader.setMat4("Model", model);
-    shader.setMat4("View", view);
-    shader.setMat4("Projection", projection);
+    m_chunk->draw(m_shader);
 
-   // shader.setMat4("mvp", glm::mat4(projection * view * model));
+    m_HighlitedCubeShader.use();
+    m_HighlitedCubeShader.setMat4("View", view);
+    m_HighlitedCubeShader.setMat4("Projection", projection);
 
-    chunk->draw(shader);
-    coordinateAxes->draw();
-    renderCube();
+    m_highlightedCube->draw(m_HighlitedCubeShader);
 
-    window.display();
-}
-
-void Game::renderCube() {
-    glBindVertexArray(cube->Vao());
-
-    glBindTexture(GL_TEXTURE_2D, cube->Texture());
-    glDrawArrays(GL_TRIANGLES, 0, 36); 
-
-    glBindVertexArray(0);
+    m_window.display();
 }

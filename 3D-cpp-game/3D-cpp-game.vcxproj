@@ -135,8 +135,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="World\Objects\CoordinatesAxes.cpp" />
-    <ClCompile Include="World\Objects\Cube.cpp" />
+    <ClCompile Include="World\Entities\Objects\HighlitedCube.cpp" />
+    <ClCompile Include="World\Collision\AABB.cpp" />
+    <ClCompile Include="World\Collision\Ray.cpp" />
+    <ClCompile Include="World\Entities\Objects\Cube.cpp" />
     <ClCompile Include="World\Chunks\CubePalette.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="util\PerlinNoise.cpp" />
@@ -146,9 +148,11 @@
     <ClCompile Include="Render\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="World\Entities\Objects\HighlitedCube.h" />
     <ClInclude Include="World\Chunks\Chunk.h" />
-    <ClInclude Include="World\Objects\CoordinatesAxes.h" />
-    <ClInclude Include="World\Objects\Cube.h" />
+    <ClInclude Include="World\Collision\AABB.h" />
+    <ClInclude Include="World\Collision\Ray.h" />
+    <ClInclude Include="World\Entities\Objects\Cube.h" />
     <ClInclude Include="World\Chunks\CubePalette.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="util\PerlinNoise.h" />
@@ -157,7 +161,9 @@
     <ClInclude Include="util\FileUtil.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\shaders\fragmentColorShader.shader" />
     <None Include="res\shaders\fragmentShader.shader" />
+    <None Include="res\shaders\vertexColorShader.shader" />
     <None Include="res\shaders\vertexShader.shader" />
   </ItemGroup>
   <ItemGroup>
