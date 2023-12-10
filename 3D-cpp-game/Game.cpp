@@ -3,8 +3,8 @@
 
 Game::Game()
     :m_camera(
-        glm::vec3(-2.0, 15.0, 0.0),
-        glm::vec3(0.0, 0.0, 0.0),
+        glm::vec3(5, 10, 5),
+        glm::vec3(0, 0, 0),
         0.f, 0.f
     )
 {
@@ -61,9 +61,25 @@ void Game::run()
         
         accumulator += frameTime;
 
-        const sf::Vector2i newMousePosition = sf::Mouse::getPosition();
-        m_camera.rotate(newMousePosition - mousePosition);
-        mousePosition = newMousePosition;
+        // Get the current mouse position relative to the window
+        sf::Vector2i currentMousePosition = sf::Mouse::getPosition(m_window);
+
+        // Calculate the center position of the window
+        sf::Vector2i centerPosition = sf::Vector2i(
+            m_window.getSize().x / 2,
+            m_window.getSize().y / 2
+        );
+
+        // Calculate the delta (difference) from the center
+        sf::Vector2i mouseDelta = currentMousePosition - centerPosition;
+
+        // Rotate the camera based on the delta
+        m_camera.rotate(mouseDelta);
+
+        // Re-center the mouse
+        sf::Mouse::setPosition(centerPosition, m_window);
+      
+
 
         while (accumulator >= dt) {
             update();

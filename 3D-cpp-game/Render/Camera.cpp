@@ -17,8 +17,7 @@ Camera::Camera(
     right = glm::normalize(glm::cross(front, worldUp));
     up = glm::normalize(glm::cross(right, front));
 
-    RecreateLookAt();
-
+    //RecreateLookAt();
 
     projection = glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
     RecreateLookAt();
@@ -31,7 +30,7 @@ Camera Camera::create(const glm::vec3& position, const glm::vec3& front, float y
 
 Ray Camera::generateRay()
 {
-    glm::vec3 rayOrigin = position;
+    glm::vec3 rayOrigin = position + glm::vec3(0.5);//glm::vec3(position.x + 0.5, position.y + 0.5, position.z + 0.5);
     glm::vec3 rayDirection = glm::normalize(front + glm::vec3(0.f, 0.f, 0.f));
 
     return Ray(rayOrigin, rayDirection);
