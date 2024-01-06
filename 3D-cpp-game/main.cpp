@@ -1,9 +1,9 @@
-#include "Game.h"
+#include "VoxelWaffle/GameEngine.h"
 
 int main()
 {
-    Game game = Game();
-    game.run();
+    VoxelWaffle::GameEngine gameEnginge = VoxelWaffle::GameEngine();
+    gameEnginge.run();
 
     return 0;
 }

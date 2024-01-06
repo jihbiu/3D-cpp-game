@@ -1,7 +1,7 @@
 #include "HighlitedCube.h"
 #include <iostream>
 
-GLfloat HighlightedCube::s_vertices[] = {
+GLfloat VoxelWaffle::HighlightedCube::s_vertices[] = {
     // Bottom square 
     -0.5f, -0.5f, -0.5f,  0.5f, -0.5f, -0.5f,
      0.5f, -0.5f, -0.5f,  0.5f, -0.5f,  0.5f,
@@ -21,7 +21,7 @@ GLfloat HighlightedCube::s_vertices[] = {
     -0.5f, -0.5f,  0.5f, -0.5f,  0.5f,  0.5f 
 };
 
-HighlightedCube::HighlightedCube(){
+VoxelWaffle::HighlightedCube::HighlightedCube(){
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
 
@@ -37,14 +37,14 @@ HighlightedCube::HighlightedCube(){
     glBindVertexArray(0);
 }
 
-HighlightedCube::~HighlightedCube() {
+VoxelWaffle::HighlightedCube::~HighlightedCube() {
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vbo);
 }
 
-void HighlightedCube::setPosition(const glm::vec3& pos){ m_position = pos; }
+void VoxelWaffle::HighlightedCube::setPosition(const glm::vec3& pos){ m_position = pos; }
 
-void HighlightedCube::draw(Shader& shader) {
+void VoxelWaffle::HighlightedCube::draw(Shader& shader) {
     glm::mat4 model = glm::translate(glm::mat4(1.0f), m_position);
 
     model = glm::scale(model, glm::vec3(1.2f)); // Make it a bit larger to see it outside the cube

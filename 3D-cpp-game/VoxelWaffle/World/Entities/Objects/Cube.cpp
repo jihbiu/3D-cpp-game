@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-std::array<float, 6 * 6 * 5> Cube::s_vertices = {
+std::array<float, 6 * 6 * 5> VoxelWaffle::Cube::s_vertices = {
 	//x       y     z       u     v
 	// Back wall
 	 -0.5f, -0.5f, -0.5f,  0.25f, 0.0f,
@@ -57,7 +57,7 @@ std::array<float, 6 * 6 * 5> Cube::s_vertices = {
 	 -0.5f,  0.5f, -0.5f,  0.25f, 1.0f / 3.0f
 };
 
-Cube::Cube(const std::string& texturePath) :
+VoxelWaffle::Cube::Cube(const std::string& texturePath) :
 	vao(0),
 	vbo(0),
 	texture(0)
@@ -104,13 +104,13 @@ Cube::Cube(const std::string& texturePath) :
 	glBindVertexArray(0);
 }
 
-Cube::Cube(Cube&& rhs) noexcept
+VoxelWaffle::Cube::Cube(Cube&& rhs) noexcept
 	: vbo(std::exchange(rhs.vbo, 0))
 	, vao(std::exchange(rhs.vao, 0))
 	, texture(std::exchange(rhs.texture, 0)) {
 }
 
-Cube& Cube::operator=(Cube&& rhs) noexcept {
+VoxelWaffle::Cube& VoxelWaffle::Cube::operator=(Cube&& rhs) noexcept {
 	if (&rhs == this) {
 		return *this;
 	}
@@ -122,7 +122,7 @@ Cube& Cube::operator=(Cube&& rhs) noexcept {
 	return *this;
 }
 
-Cube::~Cube()
+VoxelWaffle::Cube::~Cube()
 {
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);

@@ -1,6 +1,6 @@
 #include "AABB.h"
 
-AABB::AABB(const glm::vec3& min, const glm::vec3& max)
+VoxelWaffle::AABB::AABB(const glm::vec3& min, const glm::vec3& max)
 	: m_min(min)
 	, m_max(max) {
 }
@@ -8,7 +8,7 @@ AABB::AABB(const glm::vec3& min, const glm::vec3& max)
 using udword = unsigned int ;
 #define IR(x)	((udword&)x)
 
-Ray::HitType AABB::Hit(const Ray& ray, Ray::time_t minTime, Ray::time_t maxTime, HitRecord& record) const {
+VoxelWaffle::Ray::HitType VoxelWaffle::AABB::Hit(const Ray& ray, Ray::time_t minTime, Ray::time_t maxTime, HitRecord& record) const {
 	const float epsilon = 0.00001f;
 	const glm::vec3 origin = ray.getOrigin();
 	const glm::vec3 direction = ray.getDirection();

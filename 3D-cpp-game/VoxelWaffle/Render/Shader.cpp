@@ -1,6 +1,7 @@
 #include "Shader.h"
 #include <algorithm>
 
+using namespace VoxelWaffle;
 
 Shader::Shader(std::string vertexPath, std::string fragmentPath)
 {

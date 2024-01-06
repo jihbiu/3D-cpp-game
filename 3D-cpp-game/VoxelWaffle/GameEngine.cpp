@@ -1,7 +1,7 @@
-#include "Game.h"
+#include "GameEngine.h"
 #include <iostream>
 
-Game::Game()
+VoxelWaffle::GameEngine::GameEngine()
     :m_camera(
         glm::vec3(5, 10, 5),
         glm::vec3(0, 0, 0),
@@ -11,9 +11,9 @@ Game::Game()
     init();
 }
 
-Game::~Game() {}
+VoxelWaffle::GameEngine::~GameEngine() {}
 
-void Game::init() {
+void VoxelWaffle::GameEngine::init() {
     sf::ContextSettings contextSettings;
     contextSettings.depthBits = 24;
     contextSettings.sRgbCapable = false;
@@ -29,41 +29,34 @@ void Game::init() {
 
     glEnable(GL_DEPTH_TEST);
 
-    m_shader = Shader("res/shaders/vertexShader.shader", "res/shaders/fragmentShader.shader");
+    m_shader = VoxelWaffle::Shader("res/shaders/vertexShader.shader", "res/shaders/fragmentShader.shader");
 
-    m_HighlitedCubeShader = Shader("res/shaders/vertexColorShader.shader", "res/shaders/fragmentColorShader.shader");
-    m_highlightedCube = std::make_unique<HighlightedCube>();
-    
-    m_cubePalette = std::make_unique<CubePalette>();
-    m_chunk = std::make_unique<Chunk<16, 16, 16>>(
+    m_HighlitedCubeShader = VoxelWaffle::Shader("res/shaders/vertexColorShader.shader", "res/shaders/fragmentColorShader.shader");
+    m_highlightedCube = std::make_unique<VoxelWaffle::HighlightedCube>();
+
+    m_cubePalette = std::make_unique<VoxelWaffle::CubePalette>();
+    m_chunk = std::make_unique<VoxelWaffle::Chunk<16, 16, 16>>(
         glm::vec2(0, 0),
         *m_cubePalette
-    );    
-    
-    m_perlinNoise = std::make_unique<PerlinNoise>();
+    );
+
+    m_perlinNoise = std::make_unique<VoxelWaffle::PerlinNoise>();
     m_chunk->generate(*m_perlinNoise);
-    
+
 
 
     mousePosition = sf::Mouse::getPosition();
 }
 
-void Game::run() 
+void VoxelWaffle::GameEngine::run()
 {
     const double dt = 0.01;
     double currentTime = m_clock.getElapsedTime().asSeconds();
     double accumulator = 0.0;
 
     while (m_window.isOpen()) {
-        double newTime = m_clock.getElapsedTime().asSeconds();
-        double frameTime = newTime - currentTime;
-        currentTime = newTime;
-        
-        accumulator += frameTime;
-
         // Get the current mouse position relative to the window
         sf::Vector2i currentMousePosition = sf::Mouse::getPosition(m_window);
-
         // Calculate the center position of the window
         sf::Vector2i centerPosition = sf::Vector2i(
             m_window.getSize().x / 2,
@@ -72,19 +65,20 @@ void Game::run()
 
         // Calculate the delta (difference) from the center
         sf::Vector2i mouseDelta = currentMousePosition - centerPosition;
-
         // Rotate the camera based on the delta
         m_camera.rotate(mouseDelta);
 
         // Re-center the mouse
         sf::Mouse::setPosition(centerPosition, m_window);
-      
 
+        double newTime = m_clock.getElapsedTime().asSeconds();
+        double frameTime = newTime - currentTime;
+        currentTime = newTime;
 
+        accumulator += frameTime;
         while (accumulator >= dt) {
             update();
             accumulator -= dt;
-            t += dt;
         }
         processEvents(dt);
         update();
@@ -95,7 +89,7 @@ void Game::run()
     }
 }
 
-void Game::processEvents(const double &deltaTime) 
+void VoxelWaffle::GameEngine::processEvents(const double& deltaTime)
 {
     sf::Event event;
     while (m_window.pollEvent(event)) {
@@ -104,25 +98,25 @@ void Game::processEvents(const double &deltaTime)
             m_window.close();
 
         if (event.type == sf::Event::MouseButtonPressed) {
-            Ray ray = m_camera.generateRay();
-            AABB::HitRecord hitRecord;
+            VoxelWaffle::Ray ray = m_camera.generateRay();
+            VoxelWaffle::AABB::HitRecord hitRecord;
 
-            if (m_chunk->Hit(ray, 0.f, 10.f, hitRecord) == Ray::HitType::Hit) {
+            if (m_chunk->Hit(ray, 0.f, 10.f, hitRecord) == VoxelWaffle::Ray::HitType::Hit) {
                 glm::vec3 hitOrigin = hitRecord.m_point;
-                if (event.mouseButton.button == sf::Mouse::Left) 
+                if (event.mouseButton.button == sf::Mouse::Left)
                     m_chunk->RemoveBlock(hitOrigin.x, hitOrigin.y, hitOrigin.z);
-                
+
                 else if (event.mouseButton.button == sf::Mouse::Right) {
                     glm::vec3 placePosition = hitRecord.m_point;
 
-                    if (hitRecord.m_axis == AABB::Axis::x) 
+                    if (hitRecord.m_axis == VoxelWaffle::AABB::Axis::x)
                         placePosition.x += (ray.getDirection().x > 0) ? -1 : 1;
-                    else if (hitRecord.m_axis == AABB::Axis::y)
+                    else if (hitRecord.m_axis == VoxelWaffle::AABB::Axis::y)
                         placePosition.y += (ray.getDirection().y > 0) ? -1 : 1;
-                    else if (hitRecord.m_axis == AABB::Axis::z)
+                    else if (hitRecord.m_axis == VoxelWaffle::AABB::Axis::z)
                         placePosition.z += (ray.getDirection().z > 0) ? -1 : 1;
 
-                    m_chunk->PlaceBlock(placePosition.x, placePosition.y, placePosition.z, Cube::Type::Grass);
+                    m_chunk->PlaceBlock(placePosition.x, placePosition.y, placePosition.z, VoxelWaffle::Cube::Type::Grass);
                 }
             }
         }
@@ -149,12 +143,12 @@ void Game::processEvents(const double &deltaTime)
     }
 }
 
-void Game::update() 
+void VoxelWaffle::GameEngine::update()
 {
-    Ray ray = m_camera.generateRay();
-    AABB::HitRecord hitRecord;
+    VoxelWaffle::Ray ray = m_camera.generateRay();
+    VoxelWaffle::AABB::HitRecord hitRecord;
 
-    if (m_chunk->Hit(ray, 0.f, 100.f, hitRecord) == Ray::HitType::Hit) {
+    if (m_chunk->Hit(ray, 0.f, 100.f, hitRecord) == VoxelWaffle::Ray::HitType::Hit) {
         glm::vec3 hitOrigin = hitRecord.m_point;
         m_highlightedCube->setPosition(glm::vec3(hitOrigin.x - 0.5f, hitOrigin.y - 0.5f, hitOrigin.z - 0.5f));
     }
@@ -163,7 +157,7 @@ void Game::update()
     }
 }
 
-void Game::render() {
+void VoxelWaffle::GameEngine::render() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -172,7 +166,7 @@ void Game::render() {
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = m_camera.getView();
     glm::mat4 projection = m_camera.getProjection();
-   
+
     m_shader.setMat4("Model", model);
     m_shader.setMat4("View", view);
     m_shader.setMat4("Projection", projection);
