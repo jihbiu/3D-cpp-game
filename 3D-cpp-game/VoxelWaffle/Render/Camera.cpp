@@ -3,9 +3,9 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
-glm::vec3 Camera::worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+glm::vec3 VoxelWaffle::Camera::worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
-Camera::Camera(
+VoxelWaffle::Camera::Camera(
     const glm::vec3& position,
     const glm::vec3& front,
     float yaw, float pitch
@@ -23,12 +23,12 @@ Camera::Camera(
     RecreateLookAt();
 }
 
-Camera Camera::create(const glm::vec3& position, const glm::vec3& front, float yaw, float pitch)
+VoxelWaffle::Camera VoxelWaffle::Camera::create(const glm::vec3& position, const glm::vec3& front, float yaw, float pitch)
 {
-    return Camera(position, front, yaw, pitch);
+    return VoxelWaffle::Camera(position, front, yaw, pitch);
 }
 
-Ray Camera::generateRay()
+VoxelWaffle::Ray VoxelWaffle::Camera::generateRay()
 {
     glm::vec3 rayOrigin = position + glm::vec3(0.5);//glm::vec3(position.x + 0.5, position.y + 0.5, position.z + 0.5);
     glm::vec3 rayDirection = glm::normalize(front + glm::vec3(0.f, 0.f, 0.f));
@@ -36,7 +36,7 @@ Ray Camera::generateRay()
     return Ray(rayOrigin, rayDirection);
 }
 
-void Camera::rotate(const sf::Vector2i& mouseDelta)
+void VoxelWaffle::Camera::rotate(const sf::Vector2i& mouseDelta)
 {
     float sensivity = 0.3f;
     yaw += (mouseDelta.x * sensivity);
@@ -46,37 +46,37 @@ void Camera::rotate(const sf::Vector2i& mouseDelta)
     
     RecreateLookAt();
 }
-void Camera::moveForward(float dt) {
+void VoxelWaffle::Camera::moveForward(float dt) {
     float velocity = speed * dt;
     position += front * velocity;
 
     RecreateLookAt();
 }
-void Camera::moveBackward(float dt) {
+void VoxelWaffle::Camera::moveBackward(float dt) {
     float velocity = speed * dt;
     position -= front * velocity; 
 
     RecreateLookAt();
 }
-void Camera::moveLeft(float dt){
+void VoxelWaffle::Camera::moveLeft(float dt){
     float velocity = speed * dt;
     position -= right * velocity; 
 
     RecreateLookAt(); 
 }
-void Camera::moveRight(float dt){
+void VoxelWaffle::Camera::moveRight(float dt){
     float velocity = speed * dt;
     position += right * velocity; 
 
     RecreateLookAt();
 }
-void Camera::moveUp(float dt){
+void VoxelWaffle::Camera::moveUp(float dt){
     float velocity = speed * dt;
     position += up * velocity;
 
     RecreateLookAt();
 }
-void Camera::moveDown(float dt)
+void VoxelWaffle::Camera::moveDown(float dt)
 {
     float velocity = speed * dt;
     position -= up * velocity;
@@ -84,7 +84,7 @@ void Camera::moveDown(float dt)
     RecreateLookAt();
 }
 
-void Camera::RecreateLookAt() {
+void VoxelWaffle::Camera::RecreateLookAt() {
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));

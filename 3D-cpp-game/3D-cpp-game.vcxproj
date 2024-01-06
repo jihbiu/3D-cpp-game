@@ -135,30 +135,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="World\Entities\Objects\HighlitedCube.cpp" />
-    <ClCompile Include="World\Collision\AABB.cpp" />
-    <ClCompile Include="World\Collision\Ray.cpp" />
-    <ClCompile Include="World\Entities\Objects\Cube.cpp" />
-    <ClCompile Include="World\Chunks\CubePalette.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="util\PerlinNoise.cpp" />
-    <ClCompile Include="Render\Camera.cpp" />
+    <ClCompile Include="VoxelWaffle\Render\Renderer.cpp" />
+    <ClCompile Include="VoxelWaffle\GameEngine.cpp" />
+    <ClCompile Include="VoxelWaffle\World\World.cpp" />
+    <ClCompile Include="VoxelWaffle\World\Entities\Objects\HighlitedCube.cpp" />
+    <ClCompile Include="VoxelWaffle\World\Collision\AABB.cpp" />
+    <ClCompile Include="VoxelWaffle\World\Collision\Ray.cpp" />
+    <ClCompile Include="VoxelWaffle\World\Entities\Objects\Cube.cpp" />
+    <ClCompile Include="VoxelWaffle\World\Chunks\CubePalette.cpp" />
+    <ClCompile Include="VoxelWaffle\util\PerlinNoise.cpp" />
+    <ClCompile Include="VoxelWaffle\Render\Camera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Render\Shader.cpp" />
+    <ClCompile Include="VoxelWaffle\Render\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="World\Entities\Objects\HighlitedCube.h" />
-    <ClInclude Include="World\Chunks\Chunk.h" />
-    <ClInclude Include="World\Collision\AABB.h" />
-    <ClInclude Include="World\Collision\Ray.h" />
-    <ClInclude Include="World\Entities\Objects\Cube.h" />
-    <ClInclude Include="World\Chunks\CubePalette.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="util\PerlinNoise.h" />
-    <ClInclude Include="Render\Camera.h" />
-    <ClInclude Include="Render\Shader.h" />
-    <ClInclude Include="util\FileUtil.h" />
+    <ClInclude Include="VoxelWaffle\Render\Renderer.h" />
+    <ClInclude Include="VoxelWaffle\GameEngine.h" />
+    <ClInclude Include="VoxelWaffle\World\World.h" />
+    <ClInclude Include="VoxelWaffle\World\Entities\Objects\HighlitedCube.h" />
+    <ClInclude Include="VoxelWaffle\World\Chunks\Chunk.h" />
+    <ClInclude Include="VoxelWaffle\World\Collision\AABB.h" />
+    <ClInclude Include="VoxelWaffle\World\Collision\Ray.h" />
+    <ClInclude Include="VoxelWaffle\World\Entities\Objects\Cube.h" />
+    <ClInclude Include="VoxelWaffle\World\Chunks\CubePalette.h" />
+    <ClInclude Include="VoxelWaffle\util\PerlinNoise.h" />
+    <ClInclude Include="VoxelWaffle\Render\Camera.h" />
+    <ClInclude Include="VoxelWaffle\Render\Shader.h" />
+    <ClInclude Include="VoxelWaffle\util\FileUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\fragmentColorShader.shader" />

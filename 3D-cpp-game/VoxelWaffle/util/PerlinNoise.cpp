@@ -31,16 +31,16 @@ namespace {
 	}
 }
 
-PerlinNoise::PerlinNoise() {
+VoxelWaffle::PerlinNoise::PerlinNoise() {
 	std::copy(s_permutations.begin(), s_permutations.end(), m_permutations.begin());
 	std::copy(s_permutations.begin(), s_permutations.end(), m_permutations.begin() + 256);
 }
 
-PerlinNoise::PerlinNoise(float seed) {
+VoxelWaffle::PerlinNoise::PerlinNoise(float seed) {
     //...
 }
 
-float PerlinNoise::At(const glm::vec3& coords) const {
+float VoxelWaffle::PerlinNoise::At(const glm::vec3& coords) const {
 	const float _x = std::floor(coords.x);
 	const float _y = std::floor(coords.y);
 	const float _z = std::floor(coords.z);
