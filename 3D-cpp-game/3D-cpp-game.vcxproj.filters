@@ -22,10 +22,13 @@
     <ClCompile Include="VoxelWaffle\World\Collision\AABB.cpp">
       <Filter>World</Filter>
     </ClCompile>
-    <ClCompile Include="VoxelWaffle\World\Entities\Objects\HighlitedCube.cpp" />
+    <ClCompile Include="VoxelWaffle\World\Entities\Objects\HighlightedCube.cpp" />
     <ClCompile Include="VoxelWaffle\World\World.cpp" />
-    <ClCompile Include="VoxelWaffle\GameEngine.cpp" />
     <ClCompile Include="VoxelWaffle\Render\Renderer.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="VoxelWaffle\BaseGameEngine.cpp" />
+    <ClCompile Include="VoxelWaffle\World\Entities\Entity.cpp" />
+    <ClCompile Include="VoxelWaffle\World\Entities\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VoxelWaffle\Render\Shader.h" />
@@ -53,10 +56,13 @@
     <ClInclude Include="VoxelWaffle\World\Collision\AABB.h">
       <Filter>World</Filter>
     </ClInclude>
-    <ClInclude Include="VoxelWaffle\World\Entities\Objects\HighlitedCube.h" />
+    <ClInclude Include="VoxelWaffle\World\Entities\Objects\HighlightedCube.h" />
     <ClInclude Include="VoxelWaffle\World\World.h" />
-    <ClInclude Include="VoxelWaffle\GameEngine.h" />
     <ClInclude Include="VoxelWaffle\Render\Renderer.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="VoxelWaffle\BaseGameEngine.h" />
+    <ClInclude Include="VoxelWaffle\World\Entities\Entity.h" />
+    <ClInclude Include="VoxelWaffle\World\Entities\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\vertexShader.shader">
@@ -83,5 +89,7 @@
     <Image Include="res\textures\grass.jpg">
       <Filter>Render</Filter>
     </Image>
+    <Image Include="res\textures\stone.jpg" />
+    <Image Include="res\textures\grass — kopia.jpg" />
   </ItemGroup>
 </Project>
