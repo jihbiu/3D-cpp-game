@@ -1,5 +1,4 @@
-#include "HighlitedCube.h"
-#include <iostream>
+#include "HighlightedCube.h"
 
 GLfloat VoxelWaffle::HighlightedCube::s_vertices[] = {
     // Bottom square 
@@ -42,7 +41,9 @@ VoxelWaffle::HighlightedCube::~HighlightedCube() {
     glDeleteBuffers(1, &vbo);
 }
 
-void VoxelWaffle::HighlightedCube::setPosition(const glm::vec3& pos){ m_position = pos; }
+void VoxelWaffle::HighlightedCube::setPosition(const glm::vec3& pos){
+    m_position = pos; 
+}
 
 void VoxelWaffle::HighlightedCube::draw(Shader& shader) {
     glm::mat4 model = glm::translate(glm::mat4(1.0f), m_position);

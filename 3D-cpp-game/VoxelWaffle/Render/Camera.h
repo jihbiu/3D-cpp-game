@@ -25,12 +25,12 @@ namespace VoxelWaffle {
 		Ray generateRay();
 
 		void rotate(const sf::Vector2i& mouseDelta);
-		void moveForward(float dt);
-		void moveBackward(float dt);
-		void moveLeft(float dt);
-		void moveRight(float dt);
-		void moveUp(float dt);
-		void moveDown(float dt);
+		void moveForward(const float& dt);
+		void moveBackward(const float& dt);
+		void moveLeft(const float& dt);
+		void moveRight(const float& dt);
+		void moveUp(const float& dt);
+		void moveDown(const float& dt);
 
 	private:
 		void RecreateLookAt();

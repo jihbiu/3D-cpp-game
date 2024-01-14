@@ -6,6 +6,8 @@
 #include "../Collision/Ray.h"
 #include "CubePalette.h"
 
+#include <iostream>
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include "glm/gtc/matrix_transform.hpp"
@@ -89,7 +91,6 @@ namespace VoxelWaffle {
 
     template<uint8_t Depth, uint8_t Width, uint8_t Height>
     void Chunk<Depth, Width, Height>::draw(Shader& shader) const {
-
         for (size_t x = 0; x < Width; ++x) {
             for (size_t y = 0; y < Height; ++y) {
                 for (size_t z = 0; z < Depth; ++z) {

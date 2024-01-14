@@ -2,6 +2,7 @@
 
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
+#include <iostream>
 
 glm::vec3 VoxelWaffle::Camera::worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -46,40 +47,40 @@ void VoxelWaffle::Camera::rotate(const sf::Vector2i& mouseDelta)
     
     RecreateLookAt();
 }
-void VoxelWaffle::Camera::moveForward(float dt) {
+void VoxelWaffle::Camera::moveForward(const float& dt) {
     float velocity = speed * dt;
     position += front * velocity;
 
     RecreateLookAt();
 }
-void VoxelWaffle::Camera::moveBackward(float dt) {
+void VoxelWaffle::Camera::moveBackward(const float& dt) {
     float velocity = speed * dt;
     position -= front * velocity; 
 
     RecreateLookAt();
 }
-void VoxelWaffle::Camera::moveLeft(float dt){
+void VoxelWaffle::Camera::moveLeft(const float& dt){
     float velocity = speed * dt;
     position -= right * velocity; 
 
     RecreateLookAt(); 
 }
-void VoxelWaffle::Camera::moveRight(float dt){
+void VoxelWaffle::Camera::moveRight(const float& dt){
     float velocity = speed * dt;
     position += right * velocity; 
 
     RecreateLookAt();
 }
-void VoxelWaffle::Camera::moveUp(float dt){
+void VoxelWaffle::Camera::moveUp(const float& dt){
     float velocity = speed * dt;
-    position += up * velocity;
+    position.y += velocity;
 
     RecreateLookAt();
 }
-void VoxelWaffle::Camera::moveDown(float dt)
+void VoxelWaffle::Camera::moveDown(const float& dt)
 {
     float velocity = speed * dt;
-    position -= up * velocity;
+    position.y -= velocity;
 
     RecreateLookAt();
 }

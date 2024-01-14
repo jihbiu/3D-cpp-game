@@ -135,10 +135,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="VoxelWaffle\World\Entities\Player.cpp" />
     <ClCompile Include="VoxelWaffle\Render\Renderer.cpp" />
-    <ClCompile Include="VoxelWaffle\GameEngine.cpp" />
-    <ClCompile Include="VoxelWaffle\World\World.cpp" />
-    <ClCompile Include="VoxelWaffle\World\Entities\Objects\HighlitedCube.cpp" />
+    <ClCompile Include="VoxelWaffle\BaseGameEngine.cpp" />
+    <ClCompile Include="VoxelWaffle\World\Entities\Entity.cpp" />
+    <ClCompile Include="VoxelWaffle\World\Entities\Objects\HighlightedCube.cpp" />
     <ClCompile Include="VoxelWaffle\World\Collision\AABB.cpp" />
     <ClCompile Include="VoxelWaffle\World\Collision\Ray.cpp" />
     <ClCompile Include="VoxelWaffle\World\Entities\Objects\Cube.cpp" />
@@ -148,12 +150,15 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="VoxelWaffle\Render\Shader.cpp" />
+    <ClCompile Include="VoxelWaffle\World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="VoxelWaffle\World\Entities\Player.h" />
     <ClInclude Include="VoxelWaffle\Render\Renderer.h" />
-    <ClInclude Include="VoxelWaffle\GameEngine.h" />
-    <ClInclude Include="VoxelWaffle\World\World.h" />
-    <ClInclude Include="VoxelWaffle\World\Entities\Objects\HighlitedCube.h" />
+    <ClInclude Include="VoxelWaffle\BaseGameEngine.h" />
+    <ClInclude Include="VoxelWaffle\World\Entities\Entity.h" />
+    <ClInclude Include="VoxelWaffle\World\Entities\Objects\HighlightedCube.h" />
     <ClInclude Include="VoxelWaffle\World\Chunks\Chunk.h" />
     <ClInclude Include="VoxelWaffle\World\Collision\AABB.h" />
     <ClInclude Include="VoxelWaffle\World\Collision\Ray.h" />
@@ -163,6 +168,7 @@
     <ClInclude Include="VoxelWaffle\Render\Camera.h" />
     <ClInclude Include="VoxelWaffle\Render\Shader.h" />
     <ClInclude Include="VoxelWaffle\util\FileUtil.h" />
+    <ClInclude Include="VoxelWaffle\World\World.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\fragmentColorShader.shader" />
@@ -171,7 +177,9 @@
     <None Include="res\shaders\vertexShader.shader" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\textures\grass — kopia.jpg" />
     <Image Include="res\textures\grass.jpg" />
+    <Image Include="res\textures\stone.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
