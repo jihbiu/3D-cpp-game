@@ -28,7 +28,7 @@ namespace VoxelWaffle {
     class IWorld {
     public:
         struct HitRecord {
-            glm::ivec3 m_cubeCoordinates;
+            glm::ivec3 m_chunkCoordinates;
             glm::ivec3 m_neighbourCoordinates;
         };
 
@@ -37,17 +37,17 @@ namespace VoxelWaffle {
         virtual void registerStreamingSource(IStreamingSource* source) = 0;
         virtual void unregisterStreamingSource() = 0;
 
-        virtual Ray::HitType hit(const Ray& ray, Ray::time_t min, Ray::time_t max, HitRecord& record) const = 0;
+        virtual Ray::HitType hit(const Ray& ray, Ray::time_t min, Ray::time_t max, AABB::HitRecord& record) const = 0;
         virtual void removeCube(const glm::ivec3& coords) = 0;
-        virtual void placeCube(const glm::ivec3& coords, Cube::Type type) = 0;
+        virtual void placeCube(const glm::ivec3& coords, const glm::vec3& rayDirection, const AABB::Axis& axis, Cube::Type type) = 0;
     };
 
     class World : public IWorld, public IDrawable {
     public:
         struct FixedChunkSize {
-            static const size_t Width = 8;
-            static const size_t Height = 8;
-            static const size_t Depth = 8;
+            static const size_t Width = 16;
+            static const size_t Height = 16;
+            static const size_t Depth = 16;
         };
         using FixedSizeChunk = Chunk<
             FixedChunkSize::Width,
@@ -65,9 +65,9 @@ namespace VoxelWaffle {
         void registerStreamingSource(VoxelWaffle::IStreamingSource* source) override;
         void unregisterStreamingSource() override;
 
-        Ray::HitType hit(const Ray& ray, Ray::time_t min, Ray::time_t max, HitRecord& record) const override;
+        Ray::HitType hit(const Ray& ray, Ray::time_t min, Ray::time_t max, AABB::HitRecord& record) const override;
         void removeCube(const glm::ivec3& coords) override;
-        void placeCube(const glm::ivec3& coords, Cube::Type type) override;
+        void placeCube(const glm::ivec3& coords, const glm::vec3& rayDirection, const AABB::Axis& axis, Cube::Type type) override;
 
     private:
         glm::ivec2 worldCoordsToChunkOrigin(const glm::vec3& at) const;

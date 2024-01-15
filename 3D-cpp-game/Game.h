@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include "VoxelWaffle/World/Entities/Player.h"
 
 
 #define GLAP_GL_IMPLEMENTATION
@@ -35,7 +36,7 @@ private:
     VoxelWaffle::Camera m_camera;
     VoxelWaffle::Renderer m_renderer;
     VoxelWaffle::World m_world;
-
+    VoxelWaffle::Player m_player;
 
     sf::Clock m_clock;
     const double timePerFrame { 1.0 / 60.0 };
